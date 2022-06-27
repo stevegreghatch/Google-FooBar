@@ -6,5 +6,4 @@ x2 = [14, 27, 1, 4, 2, 50, 3, 1]
 y2 = [2, 4, -4, 3, 1, 1, 14, 27, 50]
 solution2 = -4 
 
-# print(list(set(x2) ^ set(y2)))
 return list(set(x2) ^ set(y2))
