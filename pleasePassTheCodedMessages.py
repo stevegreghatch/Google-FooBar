@@ -2,7 +2,7 @@ import itertools
 
 def solution(l):
     
-    l = list(sorted(array1, reverse=True))
+    l = list(sorted(l, reverse=True))
 
     possibleCombinations = []
 
