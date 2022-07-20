@@ -1,84 +1,65 @@
+from collections import deque
+
 # map1 = [[0, 1, 1, 0], [0, 0, 0, 1], [1, 1, 0, 0], [1, 1, 1, 0]]
 # map1Solution = 7
 # map2 = [[0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0], [0, 1, 1, 1, 1, 1], [0, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0]]
 # map2Solution = 11
 
-# map = map2
+# map = map1
 
 def solution(map):
-    
-    currentLocation = (0,0)
-    endLocation = (len(map)-1, len(map[len(map)-1])-1)
-    
-    count = 1
 
-    for i in range(len(map)):
-        if i < len(map)-1:
-            # print('currentLocation: ' + str(currentLocation))
-            # print('original row: ' + str(map[i]))
-            # two possbile moves -- right or down
-            validMoves = []
-            if (currentLocation[1] + 1) < len(map[i]):
-                possibleMove1 = (i, currentLocation[1] + 1)
-            else:
-                possibleMove1 = (-1, -1)
-            if i + 1 < len(map):
-                possibleMove2 = (i+1, currentLocation[1])
-            else:
-                possibleMove2 = (-1, -1)
-            if map[possibleMove1[0]] [possibleMove1[1]] == 0 and possibleMove1 != (-1,-1):
-                validMoves.append(possibleMove1)
-            if map[possibleMove2[0]] [possibleMove2[1]] == 0 and possibleMove2 != (-1,-1):
-                validMoves.append(possibleMove2)
-            # if i < len(map)-1:
-                # print('next row:     ' + str(map[i+1]))
-            # print('possibleMove1/move right: ' + str(possibleMove1))
-            # print('possibleMove2/move down: ' + str(possibleMove2))
-            # print('validMoves: ' + str(validMoves))
-            if len(validMoves) == 1:
-                # if valid move is on current row
-                previousRow = currentLocation[0]
-                currentLocation = validMoves[0]
-                newRow = currentLocation[0]
-                while previousRow == newRow:
-                    count += 1
-                    # print("current count: " + str(count))
-                    # print('\nstaying on same row')
-                    # print('currentLocation: ' + str(currentLocation))
-                    # print('original row: ' + str(map[i]))
-                    # two possbile moves -- right or down
-                    validMoves = []
-                    if (currentLocation[1] + 1) < len(map[i]):
-                        possibleMove1 = (i, currentLocation[1] + 1)
-                    else:
-                        possibleMove1 = (-1, -1)                    
-                    if i + 1 < len(map):
-                        possibleMove2 = (i+1, currentLocation[1])
-                    else:
-                        possibleMove2 = (-1, -1)
-                    if map[possibleMove1[0]] [possibleMove1[1]] == 0 and possibleMove1 != (-1,-1):
-                        validMoves.append(possibleMove1)
-                    if map[possibleMove2[0]] [possibleMove2[1]] == 0 and possibleMove2 != (-1,-1):
-                        validMoves.append(possibleMove2)
-                    # if i < len(map)-1:
-                        # print('next row:     ' + str(map[i+1]))
-                    # print('possibleMove1/move right: ' + str(possibleMove1))
-                    # print('possibleMove2/move down: ' + str(possibleMove2))
-                    # print('validMoves: ' + str(validMoves))
-                    if len(validMoves) == 1:
-                        # if valid move is on current row
-                        previousRow = currentLocation[0]
-                        currentLocation = validMoves[0]
-                        newRow = currentLocation[0]
+    # 4 possible directions
+    possibleDirections = [(0, 1), (1, 0), (0, -1), (-1, 0)]
 
-            count += 1
-            # print("current count: " + str(count))
-            # print('\n')
-            
-            if currentLocation == endLocation:
-                numberToReturn = count
-                # print("final count: " + str(numberToReturn))
-                # return
-                return numberToReturn
-        
+    # breadth-first search function
+    def bfs(row, col, map):
+        rows = len(map)
+        cols = len(map[0])
+        pathValues = []
+        # populate pathValues array with 'None' values
+        for i in range(rows):
+            pathValues.append([None] * cols)
+        # input '1' at start and end location
+        pathValues[row][col] = 1
+        # initialize queue
+        queue = deque()
+        # append start and end location to queue
+        queue.append((row, col))
+
+        # queue tracks optimal path
+        while queue:
+            row, col = queue.popleft()
+            # populate number of moves from start to end and end to start
+            for pDrow, pDcol in possibleDirections:
+                newRow, newCol = (row + pDrow, col + pDcol)
+                # if move is with bounds and array at location is currenlty unpopulated
+                if 0 <= newRow < rows and 0 <= newCol < cols and pathValues[newRow][newCol] is None:
+                    # increase value at new location
+                    pathValues[newRow][newCol] = pathValues[row][col] + 1
+                    # if new location is not a wall
+                    if map[newRow][newCol] != 1:
+                        # append to queue
+                        queue.append((newRow, newCol))
+        return pathValues
+
+    # continuation of main function
+    rows = len(map)
+    cols = len(map[0])
+    startToEnd = bfs(0, 0, map)
+    endToStart = bfs(rows - 1, cols - 1, map)
+    # height and width ranges from 2 to 20 --- highest max = 20 * 20 + 1
+    pathLength = 20 * 20 + 1
+    for i in range(rows):
+        for j in range(cols):
+            # get matching location
+            if startToEnd[i][j] and endToStart[i][j]:
+                # get path length
+                pathLength = min(pathLength, startToEnd[i][j] + endToStart[i][j] - 1)
+                # return if match
+                if pathLength == rows + cols - 1:
+                    return pathLength
+    # return lowest path
+    return pathLength
+
 # solution(map)
