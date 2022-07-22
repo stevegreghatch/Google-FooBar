@@ -3,15 +3,11 @@ def solution(n):
     possibleNumbers = []
     n = int(n)
     possibleNumbers.append(n)
-
+    
     def function(n):
         # print('original: ' + str(n))
+
         while n != 1:
-            
-            if len(possibleNumbersTotal) > 0:
-                if len(possibleNumbers) >= len(possibleNumbersTotal[0]):
-                    # print('rejecting set:' + str(possibleNumbers))
-                    return
                 
             if n % 2 == 0:
                 n = int(n/2)
@@ -30,15 +26,15 @@ def solution(n):
 
                     function(options[i])
                     
-                    if possibleNumbers not in possibleNumbersTotal:
-                        
-                        if len(possibleNumbersTotal) > 0:
-                            if len(possibleNumbers) >= len(possibleNumbersTotal[0]):
-                                # print('rejecting set:' + str(possibleNumbers))
-                                return
+                    count = len(possibleNumbers)
+                    
+                    if len(possibleNumbersTotal) > 0:
+                        if count >= possibleNumbersTotal[0]:
+                            # print('rejecting set:' + str(possibleNumbers))
+                            return
                         
                         # print('possibleNumbers: ' + str(possibleNumbers))
-                        possibleNumbersTotal.append(possibleNumbers.copy())
+                        possibleNumbersTotal.append(count)
                         numbersToCarryOver = []
                         for j in range(possibleNumbers.index(options[i])):
                             numbersToCarryOver.append(possibleNumbers[j])
@@ -54,7 +50,7 @@ def solution(n):
     
     if possibleNumbersTotal != []:
         # print('\npossibleNumbersTotal: ' + str(possibleNumbersTotal))
-        numberToReturn = len(possibleNumbersTotal[0]) - 1
+        numberToReturn = possibleNumbersTotal[0] - 1
     else:
         numberToReturn = len(possibleNumbers) - 1
         
