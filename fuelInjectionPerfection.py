@@ -5,14 +5,23 @@ def solution(n):
     possibleNumbers.append(n)
 
     def function(n):
+        # print('original: ' + str(n))
         while n != 1:
+            
+            if len(possibleNumbersTotal) > 0:
+                if len(possibleNumbers) >= len(possibleNumbersTotal[0]):
+                    # print('rejecting set:' + str(possibleNumbers))
+                    return
+                
             if n % 2 == 0:
                 n = int(n/2)
                 possibleNumbers.append(n)
+                # print('divided: ' + str(n))
             else:
                 options = []
                 options.append(n+1)
                 options.append(n-1)
+                # print('options: ' + str(options))
                 for i in range(len(options)):
                     if i == 0:
                         possibleNumbers.append(n+1)
@@ -22,23 +31,30 @@ def solution(n):
                     function(options[i])
                     
                     if possibleNumbers not in possibleNumbersTotal:
+                        
+                        if len(possibleNumbersTotal) > 0:
+                            if len(possibleNumbers) >= len(possibleNumbersTotal[0]):
+                                # print('rejecting set:' + str(possibleNumbers))
+                                return
+                        
+                        # print('possibleNumbers: ' + str(possibleNumbers))
                         possibleNumbersTotal.append(possibleNumbers.copy())
                         numbersToCarryOver = []
                         for j in range(possibleNumbers.index(options[i])):
                             numbersToCarryOver.append(possibleNumbers[j])
+                        # print('numbersToCarryOver: ' + str(numbersToCarryOver))
                         possibleNumbers.clear()
                         for j in range(len(numbersToCarryOver)):
                             possibleNumbers.append(numbersToCarryOver[j])
+                        # print('moved to next number')
                     else:
                         return
-                    
+    
     function(n)
     
     if possibleNumbersTotal != []:
-        possibleCounts = []
-        for i in range(len(possibleNumbersTotal)):
-            possibleCounts.append(len(possibleNumbersTotal[i]))
-        numberToReturn = min(possibleCounts) - 1
+        # print('\npossibleNumbersTotal: ' + str(possibleNumbersTotal))
+        numberToReturn = len(possibleNumbersTotal[0]) - 1
     else:
         numberToReturn = len(possibleNumbers) - 1
         
