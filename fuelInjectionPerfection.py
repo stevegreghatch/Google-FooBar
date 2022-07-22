@@ -24,15 +24,14 @@ def solution(n):
                     if possibleNumbers not in possibleNumbersTotal:
                         possibleNumbersTotal.append(possibleNumbers.copy())
                         numbersToCarryOver = []
-                        for j in range(len(possibleNumbers)):
-                            if j < possibleNumbers.index(options[i]):
-                                numbersToCarryOver.append(possibleNumbers[j])
+                        for j in range(possibleNumbers.index(options[i])):
+                            numbersToCarryOver.append(possibleNumbers[j])
                         possibleNumbers.clear()
                         for j in range(len(numbersToCarryOver)):
                             possibleNumbers.append(numbersToCarryOver[j])
                     else:
                         return
-    
+                    
     function(n)
     
     if possibleNumbersTotal != []:
@@ -43,4 +42,5 @@ def solution(n):
     else:
         numberToReturn = len(possibleNumbers) - 1
         
+    # print('numberToReturn: ' + str(numberToReturn))
     return numberToReturn
