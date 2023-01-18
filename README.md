@@ -1,3 +1,3 @@
-# google foo.bar
+# Google FooBar
 
-solutions for google foo.bar exercises
+solutions for google FooBar exercises
